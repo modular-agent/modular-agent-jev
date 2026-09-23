@@ -1,0 +1,675 @@
+{
+  "modules": [
+    {
+      "id": "88",
+      "def_name": "modular_agent_std::ui::NoteModule",
+      "configs": {
+        "note": "# Jev (TypeSafe AI System One) showcase\n\nEvery Jev module takes the value to judge on its `state` port (string, object, or array) and asks System One a fixed question about it. The answer is a small JSON object, never free text.\n\n**Setup**: put your key in **Settings → Module → System One → TypeSafe API Key** (or export `TYPESAFE_API_KEY`), start the patch, then press the Unit Input on the left. The same customer message feeds all four rows.\n\n- **Noul** (row 1): a yes/no question. `noul` is the probability that the instructions hold for the input.\n- **Choice** (row 2): pick one label from `criteria` (label → description, or `null`). The Get Value module pulls `choice` out of the answer; wire that into Switch / If for branching.\n- **Score** (row 3): place the input on an ordered scale of 2–10 entries. The Template String module formats `score` and `confidence` into a sentence.\n- **System One** (row 4): several named questions in one request. The output is the whole response (`model`, `answers`, `usage`). Its `err` port is wired to the Display on the right, so a missing key or a rejected request shows up there.\n\nEdit the Text Input to try other messages."
+      },
+      "config_specs": {
+        "note": {
+          "value": "",
+          "type": "markdown",
+          "hide_title": true
+        }
+      },
+      "height": 509,
+      "width": 980,
+      "x": -1025.0751680811916,
+      "y": 247.4789021763048
+    },
+    {
+      "id": "89",
+      "def_name": "modular_agent_std::input::UnitInputModule",
+      "outputs": [
+        "unit"
+      ],
+      "configs": {
+        "unit": {}
+      },
+      "config_specs": {
+        "unit": {
+          "value": null,
+          "type": "unit",
+          "hide_title": true
+        }
+      },
+      "x": 0,
+      "y": 240
+    },
+    {
+      "id": "90",
+      "def_name": "modular_agent_std::input::TextInputModule",
+      "inputs": [
+        "unit"
+      ],
+      "outputs": [
+        "text"
+      ],
+      "configs": {
+        "text": "My order arrived broken and I want my money back today."
+      },
+      "config_specs": {
+        "text": {
+          "value": "",
+          "type": "text",
+          "hide_title": true
+        }
+      },
+      "x": 240,
+      "y": 240
+    },
+    {
+      "id": "91",
+      "def_name": "modular_agent_jev::modules::NoulModule",
+      "inputs": [
+        "state"
+      ],
+      "outputs": [
+        "answer"
+      ],
+      "configs": {
+        "criteria": {
+          "false": "Anything else, including replacement or repair requests",
+          "true": "The sender wants money returned"
+        },
+        "instructions": "Is the sender asking for a refund?",
+        "model": "jev-latest"
+      },
+      "config_specs": {
+        "criteria": {
+          "value": {},
+          "type": "object",
+          "detail": true
+        },
+        "instructions": {
+          "value": "",
+          "type": "text"
+        },
+        "model": {
+          "value": "jev-latest",
+          "type": "string",
+          "detail": true
+        }
+      },
+      "x": 480,
+      "y": 240
+    },
+    {
+      "id": "92",
+      "def_name": "modular_agent_std::display::DisplayValueModule",
+      "inputs": [
+        "value"
+      ],
+      "configs": {
+        "save_value": false,
+        "value": null
+      },
+      "config_specs": {
+        "save_value": {
+          "value": false,
+          "type": "boolean",
+          "title": "Save Value",
+          "description": "Persist the displayed value in the patch file",
+          "detail": true
+        },
+        "value": {
+          "value": null,
+          "type": "*",
+          "hide_title": true,
+          "readonly": true
+        }
+      },
+      "x": 720,
+      "y": 240
+    },
+    {
+      "id": "93",
+      "def_name": "modular_agent_jev::modules::ChoiceModule",
+      "inputs": [
+        "state"
+      ],
+      "outputs": [
+        "answer"
+      ],
+      "configs": {
+        "criteria": {
+          "complaint": "The customer is unhappy with a product or service",
+          "praise": null,
+          "question": "The customer is asking for information"
+        },
+        "instructions": "What kind of message is this?",
+        "model": "jev-latest"
+      },
+      "config_specs": {
+        "criteria": {
+          "value": {},
+          "type": "object"
+        },
+        "instructions": {
+          "value": "",
+          "type": "text"
+        },
+        "model": {
+          "value": "jev-latest",
+          "type": "string",
+          "detail": true
+        }
+      },
+      "height": 480,
+      "width": 480,
+      "x": 480,
+      "y": 720
+    },
+    {
+      "id": "94",
+      "def_name": "modular_agent_std::display::DisplayValueModule",
+      "inputs": [
+        "value"
+      ],
+      "configs": {
+        "save_value": false,
+        "value": null
+      },
+      "config_specs": {
+        "save_value": {
+          "value": false,
+          "type": "boolean",
+          "title": "Save Value",
+          "description": "Persist the displayed value in the patch file",
+          "detail": true
+        },
+        "value": {
+          "value": null,
+          "type": "*",
+          "hide_title": true,
+          "readonly": true
+        }
+      },
+      "height": 480,
+      "width": 480,
+      "x": 480,
+      "y": 1200
+    },
+    {
+      "id": "95",
+      "def_name": "modular_agent_std::data::GetValueModule",
+      "inputs": [
+        "value"
+      ],
+      "outputs": [
+        "value"
+      ],
+      "configs": {
+        "key": "choice"
+      },
+      "config_specs": {
+        "key": {
+          "value": "",
+          "type": "string"
+        }
+      },
+      "x": 960,
+      "y": 720
+    },
+    {
+      "id": "96",
+      "def_name": "modular_agent_std::display::DisplayValueModule",
+      "inputs": [
+        "value"
+      ],
+      "configs": {
+        "save_value": false,
+        "value": null
+      },
+      "config_specs": {
+        "save_value": {
+          "value": false,
+          "type": "boolean",
+          "title": "Save Value",
+          "description": "Persist the displayed value in the patch file",
+          "detail": true
+        },
+        "value": {
+          "value": null,
+          "type": "*",
+          "hide_title": true,
+          "readonly": true
+        }
+      },
+      "x": 1200,
+      "y": 720
+    },
+    {
+      "id": "97",
+      "def_name": "modular_agent_jev::modules::ScoreModule",
+      "inputs": [
+        "state"
+      ],
+      "outputs": [
+        "answer"
+      ],
+      "configs": {
+        "criteria": [
+          "can wait",
+          "this week",
+          "today",
+          "right now"
+        ],
+        "instructions": "How urgent is this message?",
+        "model": "jev-latest"
+      },
+      "config_specs": {
+        "criteria": {
+          "value": [],
+          "type": "array"
+        },
+        "instructions": {
+          "value": "",
+          "type": "text"
+        },
+        "model": {
+          "value": "jev-latest",
+          "type": "string",
+          "detail": true
+        }
+      },
+      "height": 480,
+      "width": 480,
+      "x": 480,
+      "y": 1920
+    },
+    {
+      "id": "98",
+      "def_name": "modular_agent_std::display::DisplayValueModule",
+      "inputs": [
+        "value"
+      ],
+      "configs": {
+        "save_value": false,
+        "value": null
+      },
+      "config_specs": {
+        "save_value": {
+          "value": false,
+          "type": "boolean",
+          "title": "Save Value",
+          "description": "Persist the displayed value in the patch file",
+          "detail": true
+        },
+        "value": {
+          "value": null,
+          "type": "*",
+          "hide_title": true,
+          "readonly": true
+        }
+      },
+      "height": 480,
+      "width": 480,
+      "x": 480,
+      "y": 2400
+    },
+    {
+      "id": "99",
+      "def_name": "modular_agent_std::string::TemplateStringModule",
+      "inputs": [
+        "value"
+      ],
+      "outputs": [
+        "string"
+      ],
+      "configs": {
+        "template": "Urgency: {{score}} (confidence {{confidence}})"
+      },
+      "config_specs": {
+        "template": {
+          "value": "{{value}}",
+          "type": "string"
+        }
+      },
+      "height": 240,
+      "width": 480,
+      "x": 1200,
+      "y": 1920
+    },
+    {
+      "id": "100",
+      "def_name": "modular_agent_std::display::DisplayValueModule",
+      "inputs": [
+        "value"
+      ],
+      "configs": {
+        "save_value": false,
+        "value": null
+      },
+      "config_specs": {
+        "save_value": {
+          "value": false,
+          "type": "boolean",
+          "title": "Save Value",
+          "description": "Persist the displayed value in the patch file",
+          "detail": true
+        },
+        "value": {
+          "value": null,
+          "type": "*",
+          "hide_title": true,
+          "readonly": true
+        }
+      },
+      "height": 240,
+      "width": 480,
+      "x": 1200,
+      "y": 2160
+    },
+    {
+      "id": "101",
+      "def_name": "modular_agent_jev::modules::SystemOneModule",
+      "inputs": [
+        "state"
+      ],
+      "outputs": [
+        "answers"
+      ],
+      "configs": {
+        "model": "jev-latest",
+        "questions": {
+          "kind": {
+            "criteria": {
+              "complaint": null,
+              "praise": null,
+              "question": null
+            },
+            "instructions": "What kind of message is this?",
+            "type": "choice"
+          },
+          "refund": {
+            "instructions": "Is the sender asking for a refund?",
+            "type": "noul"
+          },
+          "urgency": {
+            "criteria": [
+              "can wait",
+              "this week",
+              "today",
+              "right now"
+            ],
+            "instructions": "How urgent is this message?",
+            "type": "score"
+          }
+        }
+      },
+      "config_specs": {
+        "model": {
+          "value": "jev-latest",
+          "type": "string",
+          "detail": true
+        },
+        "questions": {
+          "value": {},
+          "type": "object"
+        }
+      },
+      "height": 720,
+      "width": 480,
+      "x": 480,
+      "y": 3120
+    },
+    {
+      "id": "102",
+      "def_name": "modular_agent_std::display::DisplayValueModule",
+      "inputs": [
+        "value"
+      ],
+      "configs": {
+        "save_value": false,
+        "value": null
+      },
+      "config_specs": {
+        "save_value": {
+          "value": false,
+          "type": "boolean",
+          "title": "Save Value",
+          "description": "Persist the displayed value in the patch file",
+          "detail": true
+        },
+        "value": {
+          "value": null,
+          "type": "*",
+          "hide_title": true,
+          "readonly": true
+        }
+      },
+      "height": 960,
+      "width": 480,
+      "x": 960,
+      "y": 3120
+    },
+    {
+      "id": "105",
+      "def_name": "modular_agent_std::input::UnitInputModule",
+      "outputs": [
+        "unit"
+      ],
+      "configs": {
+        "unit": {}
+      },
+      "config_specs": {
+        "unit": {
+          "value": null,
+          "type": "unit",
+          "hide_title": true
+        }
+      },
+      "x": 0,
+      "y": 720
+    },
+    {
+      "id": "106",
+      "def_name": "modular_agent_std::input::TextInputModule",
+      "inputs": [
+        "unit"
+      ],
+      "outputs": [
+        "text"
+      ],
+      "configs": {
+        "text": "My order arrived broken and I want my money back today."
+      },
+      "config_specs": {
+        "text": {
+          "value": "",
+          "type": "text",
+          "hide_title": true
+        }
+      },
+      "x": 240,
+      "y": 720
+    },
+    {
+      "id": "107",
+      "def_name": "modular_agent_std::input::UnitInputModule",
+      "outputs": [
+        "unit"
+      ],
+      "configs": {
+        "unit": {}
+      },
+      "config_specs": {
+        "unit": {
+          "value": null,
+          "type": "unit",
+          "hide_title": true
+        }
+      },
+      "x": 0,
+      "y": 1920
+    },
+    {
+      "id": "108",
+      "def_name": "modular_agent_std::input::TextInputModule",
+      "inputs": [
+        "unit"
+      ],
+      "outputs": [
+        "text"
+      ],
+      "configs": {
+        "text": "My order arrived broken and I want my money back today."
+      },
+      "config_specs": {
+        "text": {
+          "value": "",
+          "type": "text",
+          "hide_title": true
+        }
+      },
+      "x": 240,
+      "y": 1920
+    },
+    {
+      "id": "109",
+      "def_name": "modular_agent_std::input::UnitInputModule",
+      "outputs": [
+        "unit"
+      ],
+      "configs": {
+        "unit": {}
+      },
+      "config_specs": {
+        "unit": {
+          "value": null,
+          "type": "unit",
+          "hide_title": true
+        }
+      },
+      "x": 0,
+      "y": 3120
+    },
+    {
+      "id": "110",
+      "def_name": "modular_agent_std::input::TextInputModule",
+      "inputs": [
+        "unit"
+      ],
+      "outputs": [
+        "text"
+      ],
+      "configs": {
+        "text": "My order arrived broken and I want my money back today."
+      },
+      "config_specs": {
+        "text": {
+          "value": "",
+          "type": "text",
+          "hide_title": true
+        }
+      },
+      "x": 240,
+      "y": 3120
+    }
+  ],
+  "connections": [
+    {
+      "source": "89",
+      "source_handle": "unit",
+      "target": "90",
+      "target_handle": "unit"
+    },
+    {
+      "source": "90",
+      "source_handle": "text",
+      "target": "91",
+      "target_handle": "state"
+    },
+    {
+      "source": "91",
+      "source_handle": "answer",
+      "target": "92",
+      "target_handle": "value"
+    },
+    {
+      "source": "93",
+      "source_handle": "answer",
+      "target": "94",
+      "target_handle": "value"
+    },
+    {
+      "source": "93",
+      "source_handle": "answer",
+      "target": "95",
+      "target_handle": "value"
+    },
+    {
+      "source": "95",
+      "source_handle": "value",
+      "target": "96",
+      "target_handle": "value"
+    },
+    {
+      "source": "97",
+      "source_handle": "answer",
+      "target": "98",
+      "target_handle": "value"
+    },
+    {
+      "source": "97",
+      "source_handle": "answer",
+      "target": "99",
+      "target_handle": "value"
+    },
+    {
+      "source": "99",
+      "source_handle": "string",
+      "target": "100",
+      "target_handle": "value"
+    },
+    {
+      "source": "101",
+      "source_handle": "answers",
+      "target": "102",
+      "target_handle": "value"
+    },
+    {
+      "source": "105",
+      "source_handle": "unit",
+      "target": "106",
+      "target_handle": "unit"
+    },
+    {
+      "source": "107",
+      "source_handle": "unit",
+      "target": "108",
+      "target_handle": "unit"
+    },
+    {
+      "source": "109",
+      "source_handle": "unit",
+      "target": "110",
+      "target_handle": "unit"
+    },
+    {
+      "source": "106",
+      "source_handle": "text",
+      "target": "93",
+      "target_handle": "state"
+    },
+    {
+      "source": "108",
+      "source_handle": "text",
+      "target": "97",
+      "target_handle": "state"
+    },
+    {
+      "source": "110",
+      "source_handle": "text",
+      "target": "101",
+      "target_handle": "state"
+    }
+  ],
+  "viewport": {
+    "x": 453.67971793333527,
+    "y": -181.14270220999015,
+    "zoom": 0.28717458874925933
+  }
+}
