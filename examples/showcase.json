@@ -79,8 +79,7 @@
       "config_specs": {
         "criteria": {
           "value": {},
-          "type": "object",
-          "detail": true
+          "type": "object"
         },
         "instructions": {
           "value": "",
@@ -93,7 +92,9 @@
         }
       },
       "x": 480,
-      "y": 240
+      "y": 240,
+      "width": 480,
+      "height": 480
     },
     {
       "id": "92",
@@ -120,7 +121,7 @@
           "readonly": true
         }
       },
-      "x": 720,
+      "x": 960,
       "y": 240
     },
     {

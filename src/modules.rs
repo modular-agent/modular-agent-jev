@@ -255,7 +255,7 @@ impl AsModule for SystemOneModule {
     inputs = [PORT_STATE],
     outputs = [PORT_ANSWER],
     text_config(name = CONFIG_INSTRUCTIONS),
-    object_config(name = CONFIG_CRITERIA, detail),
+    object_config(name = CONFIG_CRITERIA),
     string_config(name = CONFIG_MODEL, default = DEFAULT_MODEL, detail),
 )]
 struct NoulModule {
